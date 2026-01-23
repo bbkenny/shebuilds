@@ -10,7 +10,7 @@ This file contains all development tasks for the TreaSure project, covering both
 - [ ] Create `.env.local` for Frontend with:
   - `NEXT_PUBLIC_REOWN_PROJECT_ID`
   - `NEXT_PUBLIC_BASE_RPC_URL`
-- [ ] Create `.env` for Smart Contracts with:
+- [x] Create .env template for Smart Contracts ✅
   - `PRIVATE_KEY`
   - `BASESCAN_API_KEY`
 - [x] Define project vision and architecture in README.md ✅
