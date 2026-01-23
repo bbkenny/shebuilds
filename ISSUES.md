@@ -1,108 +1,111 @@
-# 📋 SheBuilds Development Issues & Tasks
+# 📋 TreaSure Development Issues & Tasks
 
-## 🚀 High Priority
+This file contains all development tasks for the TreaSure project, covering both Smart Contracts and Frontend development.
 
-### Smart Contract
-- [ ] Write comprehensive tests for SheBuilds.sol
-- [ ] Test soulbound token transfer restrictions
-- [ ] Test batch minting functionality
-- [ ] Implement ERC-5192 Soulbound standard (optional)
-- [ ] Add credential revocation functionality
-- [ ] Gas optimization review
-- [ ] Security audit preparation
+---
 
-### Frontend
-- [ ] Set up Next.js project
-- [ ] Install Web3 dependencies (ethers.js, wagmi, RainbowKit)
-- [ ] Create wallet connection flow
-- [ ] Build credential minting interface (for issuers)
-- [ ] Build user profile/portfolio page
-- [ ] Display NFT credentials with metadata
-- [ ] Implement skill search and filtering
-- [ ] Create recruiter discovery interface
+## 🔧 What Needs to Be Done
 
-### IPFS Integration
-- [ ] Set up NFT.storage or Pinata
-- [ ] Create metadata upload utility
-- [ ] Generate dynamic SVG images for credentials
-- [ ] Implement metadata caching
+### 1. Project Foundation & Configuration
+- [ ] Create `.env.local` for Frontend with:
+  - `NEXT_PUBLIC_REOWN_PROJECT_ID`
+  - `NEXT_PUBLIC_BASE_RPC_URL`
+- [ ] Create `.env` for Smart Contracts with:
+  - `PRIVATE_KEY`
+  - `BASESCAN_API_KEY`
+- [x] Define project vision and architecture in README.md ✅
 
-## 🎨 UI/UX Features
+### 2. Smart Contract Development (Solidity)
+- [ ] **Merchant Vaults:**
+  - [ ] Implement `TreasuryVault.sol` (ERC-4626 compatible)
+  - [ ] Add Multi-signature approval logic for withdrawals
+  - [ ] Implement Role-Based Access Control (Owner, Operator, Auditor)
+- [ ] **Payroll System:**
+  - [ ] Implement `PayrollEngine.sol` for scheduled payouts
+  - [ ] Add support for "Streaming Payments" (optional/bonus)
+  - [ ] Implement "Proof of Payment" event logging
+- [ ] **Factory & Infrastructure:**
+  - [ ] Implement `VaultFactory.sol` for permissionless vault deployment
+  - [ ] Integrate Chainlink Price Feeds for FX-rate visualization
+- [ ] **Testing & Security:**
+  - [ ] Write unit tests for Vault logic (>90% coverage)
+  - [ ] Write integration tests for Vault-to-Payroll flow
+  - [ ] Run Slither/Mythril security analysis
 
-### Builder Profile
-- [ ] Display all earned credentials
-- [ ] Show skills with visual badges
-- [ ] Project showcase with links
-- [ ] Shareable public profile URL
-- [ ] Download credentials as images/PDF
+### 3. Frontend Development (Next.js)
+- [ ] **Core Setup:**
+  - [ ] Configure Wagmi v2 + Reown AppKit for Base/Celo
+  - [ ] Implement global `Web3Provider`
+  - [ ] Build responsive layout with Sidebar and Header
+- [ ] **Merchant Vault Tab:**
+  - [ ] Build Vault Overview (Balance, Asset Distribution)
+  - [ ] Implement Deposit/Withdrawal interface
+  - [ ] Create Signer Management dashboard (Add/Remove members)
+  - [ ] Build Transaction History / Audit Trail list
+- [ ] **Payroll Tab:**
+  - [ ] Build Team Management interface (Add worker address + salary)
+  - [ ] Create Payroll Scheduler UI
+  - [ ] Implement "Pay All" bulk transaction logic
+  - [ ] Build "Proof of Payment" viewer with block explorer links
+- [ ] **UX/UI Polish:**
+  - [ ] Implement Dark/Light mode support
+  - [ ] Add loading skeletons for blockchain data
+  - [ ] Success/Error toast notifications
 
-### Issuer Dashboard
-- [ ] Bulk credential minting interface
-- [ ] Template management for credentials
-- [ ] Analytics (credentials issued, recipients)
-- [ ] Organization branding customization
+### 4. Integration & Deployment
+- [ ] Deploy contracts to Base Sepolia
+- [ ] Create `lib/abi/` and `lib/contracts.ts` in frontend
+- [ ] Implement custom hooks (`useVault`, `usePayroll`)
+- [ ] Setup Subgraph/Indexer for efficient data fetching
 
-### Recruiter Interface
-- [ ] Search builders by skills
-- [ ] Filter by credential types
-- [ ] View builder portfolios
-- [ ] Verify credentials on-chain
-- [ ] Contact/connect functionality
+---
 
-## 🔒 Security & Testing
-- [ ] Smart contract unit tests
-- [ ] Integration tests
-- [ ] Access control testing
-- [ ] Soulbound transfer prevention tests
-- [ ] Frontend security review
-- [ ] Wallet connection security
+## 🎯 Priority Order
 
-## 📚 Documentation
-- [ ] Smart contract API documentation
-- [ ] User guide for builders
-- [ ] Guide for organizations/issuers
-- [ ] Recruiter onboarding guide
-- [ ] Deployment guide
-- [ ] Contributing guidelines
+### Phase 1: MVP Core (Critical)
+1. [ ] Smart Contract: Basic `TreasuryVault.sol`
+2. [ ] Smart Contract: `VaultFactory.sol`
+3. [ ] Frontend: Wallet connection & Vault deployment interface
+4. [ ] Frontend: Deposit/Withdraw functionality
 
-## 🌟 Feature Ideas
+### Phase 2: Payroll & Management
+1. [ ] Smart Contract: `PayrollEngine.sol`
+2. [ ] Frontend: Team management UI
+3. [ ] Frontend: Execute payroll flow
+4. [ ] Smart Contract: Multi-sig approvals
 
-### Phase 1 (MVP)
-- [ ] Basic credential minting
-- [ ] User profiles
-- [ ] Skill tracking
-- [ ] Wallet connection
+### Phase 3: Polish & Scaling
+1. [ ] Multi-chain support (Base + Celo)
+2. [ ] Real-time data indexing
+3. [ ] Advanced analytics & PDF payslip generation
 
-### Phase 2 (Enhanced)
-- [ ] Skill endorsements (peer verification)
-- [ ] Learning path recommendations
-- [ ] Achievement milestones
-- [ ] Social sharing features
-- [ ] Email notifications
+---
 
-### Phase 3 (Advanced)
-- [ ] Job board integration
-- [ ] Mentorship matching platform
-- [ ] Community forums
-- [ ] Events and workshops
-- [ ] Multi-chain support
-- [ ] Mobile app (React Native)
-- [ ] AI-powered skill recommendations
+## 📝 Key Files to Create
 
-## 🐛 Known Issues
-- None yet
+### Smart Contracts:
+- `contracts/TreasuryVault.sol`
+- `contracts/PayrollEngine.sol`
+- `contracts/VaultFactory.sol`
+- `test/Vault.test.ts`
 
-## 💡 Design Considerations
-- [ ] Credential visual design (SVG templates)
-- [ ] Color scheme and branding
-- [ ] Responsive mobile design
-- [ ] Accessibility (WCAG compliance)
-- [ ] Dark mode support
+### Frontend:
+- `config/wagmi.ts`
+- `context/Web3Provider.tsx`
+- `hooks/useVault.ts`
+- `components/dashboard/VaultTab.tsx`
+- `components/dashboard/PayrollTab.tsx`
 
-## 🎯 Metrics to Track
-- [ ] Total credentials minted
-- [ ] Active builders
-- [ ] Active issuers
-- [ ] Skills distribution
-- [ ] User engagement
-- [ ] Recruiter activity
+---
+
+## 🚀 Getting Started for Contributors
+
+1. Check the **Phase 1** issues above.
+2. Fork the repository and create a feature branch (`feat/issue-name`).
+3. Ensure you follow the modular commit strategy (commit after finishing logical blocks).
+4. Run tests before submitting a PR.
+
+## 💡 Implementation Notes
+- **Security:** Funds should ALWAYS originate from the Vault. The Payroll engine should only move funds, never store them separately.
+- **Auditable:** Every action (adding a signer, changing a salary) must emit a verifiable event.
+- **Trustable:** Use OpenZeppelin standards where possible to minimize risk.
