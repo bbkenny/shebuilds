@@ -1,162 +1,114 @@
-# 📋 TreaSure: Detailed Development Roadmap & Issues
+# SheBuilds Project Issues & Tasks
 
-This document breaks down the TreaSure project into granular tasks. Contributors should pick an issue, create a branch (`feat/issue-title`), and follow the modular commit strategy.
-
----
-
-## 🏗️ 1. Project Infrastructure & Setup
-
-### Issue #1: Frontend Framework & Tailwind Setup
-- [ ] Initialize Next.js 14/15 with App Router and TypeScript.
-- [ ] Configure Tailwind CSS v3/v4 with the project color palette (Deep Blue, Mint Green, Slate).
-- [ ] Set up basic folder structure: `components/`, `hooks/`, `context/`, `lib/`, `types/`.
-
-### Issue #2: Web3 Connectivity Setup (Wagmi + Reown)
-- [ ] Install and configure `wagmi`, `viem`, and `@reown/appkit`.
-- [ ] Create `config/wagmi.ts` for Base Sepolia and Celo Alfajores networks.
-- [ ] Implement `context/Web3Provider.tsx` to wrap the application.
-
-### Issue #3: Environment Variable Configuration
-- [ ] Complete `.env.local` for frontend (Project IDs, RPC URLs).
-- [ ] Complete `.env` for smart contracts (Private Key, API Keys).
-- [ ] Create a `config/constants.ts` file to store contract addresses and common IDs.
+This document outlines all the development tasks needed to build **SheBuilds**, a proof-of-skill NFT platform for women builders in Web3.
 
 ---
 
-## 🔐 2. Smart Contract Development (Solidity)
+## 🏗️ Workflow Overviews
 
-### Issue #4: TreasuryVault Interface & Storage
-- [ ] Define `ITreasuryVault` interface.
-- [ ] Implement storage structures for Multi-sig signers and approval thresholds.
-- [ ] Add basic `Ownable` and `AccessControl` inheritance.
+### 1. Skill Credentialing Lifecycle
+1. **Issuer Onboarding**: Organizations (e.g., coding camps, workshops) are whitelisted as official issuers.
+2. **Achievement Verification**: Issuer verifies that a builder has completed a course or project.
+3. **NFT Minting**: An NFT is minted to the builder's wallet (ERC-721 or ERC-5192 Soulbound).
+4. **Metadata Storage**: Skills, technologies, and level are stored on IPFS and linked via the `tokenURI`.
+5. **Talent Discovery**: Recruiters browse builders and verify skills on-chain.
 
-### Issue #5: ERC-4626 implementation
-- [ ] Inherit and implement OpenZeppelin's ERC-4626 for the vault.
-- [ ] Customize `deposit` and `mint` to support Merchant-specific metadata.
-- [ ] Add `totalAssets` logic to reflect underlying stablecoin balances (USDC/USDT).
-
-### Issue #6: Multi-Signature Approval Logic
-- [ ] Create internal mapping to track withdrawal requests.
-- [ ] Implement `requestWithdrawal(address receiver, uint256 amount)`.
-- [ ] Implement `approveWithdrawal(uint256 requestId)` for authorized signers.
-- [ ] Implement `executeWithdrawal(uint256 requestId)` once threshold is met.
-
-### Issue #7: PayrollEngine Core Logic
-- [ ] Implement `addEmployee(address wallet, uint256 salary, uint256 interval)`.
-- [ ] Implement `updateEmployee(address wallet, uint256 newSalary)`.
-- [ ] Implement `removeEmployee(address wallet)`.
-- [ ] Add state mapping to track the last payment timestamp for each worker.
-
-### Issue #8: Payroll Execution Logic
-- [ ] Implement `executePayroll(address[] workers)` function.
-- [ ] Ensure funds are pulled directly from the linked `TreasuryVault`.
-- [ ] Add validation: Ensure vault has sufficient balance before transfer.
-- [ ] Emit `PayrollPaid` events for each successful transaction.
-
-### Issue #9: Vault Factory Contract
-- [ ] Implement `VaultFactory.sol` to deploy new `TreasuryVault` instances.
-- [ ] Create a registry mapping `address owner => address[] vaults`.
-- [ ] Implement `getVaultsByOwner(address owner)` view function.
-
-### Issue #10: Price Feed Integration (Chainlink)
-- [ ] Integrate Chainlink `AggregatorV3Interface` in the vault.
-- [ ] Add logic to fetch USD price of local assets (if applicable) or for rate visualization.
+### 2. Recruiter & Portfolio Flow
+1. **Public Profile**: Builders share a unique URL showcasing all their verified skill NFTs.
+2. **Verification**: Recruiter clicks "Verify" to confirm the NFT is valid and issued by a trusted partner.
+3. **Contact**: Recruiters connect directly with builders based on proven skillsets.
 
 ---
 
-## 🎨 3. Frontend: Components & Layout
+## 🛠️ Smart Contract Issues (Solidity)
 
-### Issue #11: Global Dashboard Layout
-- [ ] Build a responsive `Sidebar` component with navigation (Dashboard, Vaults, Payroll, Settings).
-- [ ] Create a `Navbar` with Wallet Connection button and Network switcher.
-- [ ] Implement a `LayoutWrapper` to maintain consistent design across pages.
+### Phase 1: NFT Core & Standards
+- [ ] **Issue #1**: NFT Contract Initialization
+  - [ ] Implement `SheBuildsNFT.sol` using ERC-721.
+  - [ ] Support `Base` L2 deployment parameters.
+  - [ ] Setup `Hardhat Ignition` for contract management.
+- [ ] **Issue #2**: Soulbound Token (SBT) Implementation
+  - [ ] Implement **ERC-5192** standard for non-transferability.
+  - [ ] Override `_update` function to prevent transfers (except minting/burning).
+- [ ] **Issue #3**: Issuer Whitelist Management
+  - [ ] Implement `IssuerRegistry` logic (Admin only can add/remove issuers).
+  - [ ] Create `isIssuer` modifier for the `mint` function.
 
-### Issue #12: UI Component Library
-- [ ] Build reusable `Button` component (Primary, Secondary, Outline).
-- [ ] Build `Card` component for data visualization.
-- [ ] Build `Modal` component for transaction confirmations.
-- [ ] Build `Input` component with validation states.
+### Phase 2: Minting & Metadata
+- [ ] **Issue #4**: Granular Minting Function
+  - [ ] Implement `mintCredential(recipient, metadataHash)` function.
+  - [ ] Add `batchMint` support for graduating cohorts.
+  - [ ] Emit `CredentialIssued` event with skill category.
+- [ ] **Issue #5**: Metadata Structure & Storage
+  - [ ] Define on-chain attributes for quick filtering (e.g., `skillCategory`, `proficiency`).
+  - [ ] Link to IPFS for extended JSON metadata.
 
----
-
-## 🟢 4. Merchant Vault Tab (Frontend)
-
-### Issue #13: Vault Overview Dashboard
-- [ ] Design and build the "Total Balance" header with currency toggles.
-- [ ] Create a "Proof-of-Reserves" chart using `Recharts` or similar.
-- [ ] Build a summary card for "Pending Approvals" count.
-
-### Issue #14: Deposit & Withdrawal Forms
-- [ ] Implement "Deposit Stablecoins" form with token approval logic.
-- [ ] Build "Request Withdrawal" form with multi-sig signer selection.
-- [ ] Implement real-time balance updates after transactions.
-
-### Issue #15: Signer Management UI
-- [ ] Create a list view of current vault signers.
-- [ ] Implement "Add Signer" and "Remove Signer" transaction triggers.
-- [ ] Build a visualization for the current approval threshold (e.g., "2 of 3").
-
-### Issue #16: Transaction Audit Trail
-- [ ] Build a table to display `Deposit`, `Withdrawal`, and `SignerChange` events.
-- [ ] Integrate block explorer links (BaseScan/CeloScan) for every row.
+### Phase 3: Security & Governance
+- [ ] **Issue #6**: Revocation Mechanism
+  - [ ] Implement `revokeCredential` for issuers (in case of error or fraud).
+- [ ] **Issue #7**: Security Audit & Review
+  - [ ] Integrate `AccessControl` for managing admin and issuer roles.
+  - [ ] Add `ReentrancyGuard` and `Pausable` for contract safety.
 
 ---
 
-## 🔵 5. FX-Safe Payroll Tab (Frontend)
+## 💻 Frontend Issues (Next.js)
 
-### Issue #17: Team Management Interface
-- [ ] Build a card-based list of employees/contractors.
-- [ ] Implement "Add Team Member" modal with salary and frequency inputs.
-- [ ] Create "Edit/Delete" functionality for worker records.
+### Phase 4: Architecture & Web3 Setup
+- [ ] **Issue #8**: Next.js App Router Structure
+  - [ ] Setup `app/builders`, `app/issuers`, and `app/recruiters` route segments.
+  - [ ] Configure Tailwind CSS 4 with custom branding (Vibrant Violet & Neon Teal).
+- [ ] **Issue #9**: Blockchain Provider Integration
+  - [ ] Setup `Wagmi` with Base Sepolia support.
+  - [ ] Integrate `RainbowKit` with custom theme matching the SheBuilds brand.
+  - [ ] Build `useNFTMetadata` custom hook for fetching and parsing IPFS JSON.
 
-### Issue #18: Payroll Execution Dashboard
-- [ ] Design a "Next Payout" countdown for scheduled workers.
-- [ ] Implement a "Bulk Pay" button with a summary of total cost.
-- [ ] Create a transaction status tracker for payroll runs.
+### Phase 5: Component Development
+- [ ] **Issue #10**: Builder Portfolio Dashboard
+  - [ ] Build `NFTCard` with 3D hover effects (Framer Motion).
+  - [ ] Build `SkillGrid` showing aggregated technology icons.
+  - [ ] Implement "Share Portfolio" social sharing utility.
+- [ ] **Issue #11**: Issuer Minting Portal
+  - [ ] Build `MintingForm` with dynamic attribute inputs.
+  - [ ] Build `CSVUploader` for batch cohort minting.
+  - [ ] Integrate `Pinata` for automatic metadata IPFS pinning.
+- [ ] **Issue #12**: Recruiter Discovery UI
+  - [ ] Build `BuilderSearch` with technology filtering (e.g., "Solidity", "React").
+  - [ ] Create `VerificationBadge` component for on-chain status checks.
 
-### Issue #19: Proof-of-Payment & Payslips
-- [ ] Build a "Payroll History" view.
-- [ ] Implement a "Generate Payslip" button (CSV or PDF export).
-- [ ] Add on-chain verification badges for paid salaries.
-
----
-
-## 🔒 6. Testing & Quality Assurance
-
-### Issue #20: Vault Unit Tests
-- [ ] Test ERC-4626 standard compliance.
-- [ ] Test multi-sig threshold edge cases (e.g., double approval prevention).
-- [ ] Test unauthorized access rejection.
-
-### Issue #21: Payroll Engine Tests
-- [ ] Test salary calculation logic.
-- [ ] Test "Insufficient Vault Balance" revert scenarios.
-- [ ] Test bulk payout gas limits.
-
-### Issue #22: Integration Tests (End-to-End)
-- [ ] Test Full Flow: Deploy Vault -> Deposit -> Add Employee -> Execute Payroll.
+### Phase 6: Design & Animation
+- [ ] **Issue #13**: Dynamic SVG Generator
+  - [ ] Create a utility to generate visual NFT images based on skill data.
+- [ ] **Issue #14**: Polish & Micro-interactions
+  - [ ] Add "Claim NFT" animation sequence.
+  - [ ] Implement loading skeletons for the NFT gallery.
 
 ---
 
-## 📚 7. Documentation & Final Polish
+## 🧪 Testing & Quality Assurance
 
-### Issue #23: Simple Inline Comments
-- [ ] Add clear, single-line comments explaining logic for all contract functions.
-- [ ] Ensure state variables have brief descriptive comments.
-
-### Issue #24: Deployment Scripts & Task Runner
-- [ ] Write Hardhat Ignition or standard scripts for multi-chain deployment.
-- [ ] Create a `DEPLOYMENT.md` guide with verified contract addresses.
-
-### Issue #25: UX Polish & Notifications
-- [ ] Implement `react-hot-toast` or `sonner` for transaction feedback.
-- [ ] Add loading skeletons for data-heavy components.
-- [ ] Ensure mobile responsiveness for the entire dashboard.
+- [ ] **Issue #15**: SBT Transfer Lock Tests
+  - [ ] Verify tokens cannot be transferred between user wallets.
+- [ ] **Issue #16**: Role-Based Minting Tests
+  - [ ] Ensure only whitelisted issuers can mint specific skill credentials.
 
 ---
 
-## 💡 Notes for Contributors
-- Keep the **Payroll Engine** simple: it only moves funds from the Vault.
-- Always check for **zero-address** inputs in contracts.
-- Use **modular commits**: `feat(vault): add multi-sig storage`, `fix(ui): sidebar spacing on mobile`.
-- Use **single-line comments** for code logic only.
+## 🚀 Deployment & CI/CD
+
+- [ ] **Issue #17**: Multi-environment Deployment
+  - [ ] Deploy SBT contracts to Base Sepolia for testing.
+  - [ ] Verify contract source code on BaseScan.
+
+---
+
+## 📊 Priority Levels
+
+- **P0 (Critical)**: Issues #1, #2, #3, #9, #10
+- **P1 (High)**: Issues #4, #8, #11, #12
+- **P2 (Medium)**: Issues #5, #6, #13, #15
+- **P3 (Low)**: Issues #7, #14, #16, #17
+
+---
+
+**Authored by: bbkenny <jouleself@gmail.com>**
